@@ -61,19 +61,19 @@ p.rho       = scaling*c.rho/sum(c.rho)
 # jpeg(file="ur.jpg", width=2*1080,height=2*840)
 pdf(file="mcxs/ur.pdf", width=1.66*9,height=1.66*7)
 f3    = persp3D(x=rho.grid[1:21], y=rho.grid[1:31], z=p.rho[1:21,1:31], phi=12, theta=110, zlim=c(0,p.rho[21,21]), 
-                xlab="", ylab="", zlab="", shade=.01, border="black", nticks=3,cex.lab=1.5, col="white", scale=FALSE, box=FALSE, bty="f")
+                xlab="", ylab="", zlab="", shade=.01, border="black", nticks=3,cex.lab=1.5, col="white", scale=FALSE, box=TRUE, bty="n")
 f3.l1 = trans3d(x=rho.grid[1:21], y=rho.grid[1:21], z=diag(p.rho[1:21,1:21]), pmat=f3)
 lines(f3.l1, lwd=1)
 f3.l2 = trans3d(x=rho.grid[21], y=rho.grid[1:31], z=p.rho[21,1:31], pmat=f3)
 lines(f3.l2, lwd=12, col=stickerColor)
-f3.l3 = trans3d(x=rho.grid[21], y=rho.grid[21], z=c(0,p.rho[21,21]), pmat=f3)
-lines(f3.l3, lwd=1)
-f3.l4 = trans3d(x=rho.grid[1:21], y=rho.grid[21], z=rep(p.rho[21,21],2), pmat=f3)
-lines(f3.l4, lwd=1)
-f3.l5 = trans3d(x=rho.grid[1], y=rho.grid[21], z=c(0,p.rho[21,21]), pmat=f3)
-lines(f3.l5, lwd=1)
-f3.l6 = trans3d(x=rho.grid[1:21], y=rho.grid[21], z=rep(0,2), pmat=f3)
-lines(f3.l6, lwd=1)
+# f3.l3 = trans3d(x=rho.grid[21], y=rho.grid[21], z=c(0,p.rho[21,21]), pmat=f3)
+# lines(f3.l3, lwd=1)
+# f3.l4 = trans3d(x=rho.grid[1:21], y=rho.grid[21], z=rep(p.rho[21,21],2), pmat=f3)
+# lines(f3.l4, lwd=1)
+# f3.l5 = trans3d(x=rho.grid[1], y=rho.grid[21], z=c(0,p.rho[21,21]), pmat=f3)
+# lines(f3.l5, lwd=1)
+# f3.l6 = trans3d(x=rho.grid[1:21], y=rho.grid[21], z=rep(0,2), pmat=f3)
+# lines(f3.l6, lwd=1)
 dev.off()
 
 
@@ -84,9 +84,9 @@ final_res<- hexSticker::sticker(img, package="mcxs", p_size=30,
                    p_family = "sans",
                    p_y = 1.5,
                    p_color = stickerColor,
-                   s_x=0.95, s_y=0.8, 
+                   s_x=0.95, s_y=0.88, 
                    s_width=2,
-                   s_height = 0.96,
+                   s_height = 1.05,
                    filename="mcxs/mcxs.png",h_fill="white",h_color = stickerColor)
 
 plot(final_res)
