@@ -59,7 +59,7 @@ scaling     = 20
 p.rho       = scaling*c.rho/sum(c.rho)
 
 # jpeg(file="ur.jpg", width=2*1080,height=2*840)
-pdf(file="mcxs/ur.pdf", width=1.66*9,height=1.66*7)
+svg(file="mcxs/ur.svg", width=1.66*9,height=1.66*7)
 f3    = persp3D(x=rho.grid[1:21], y=rho.grid[1:31], z=p.rho[1:21,1:31], phi=12, theta=110, zlim=c(0,p.rho[21,21]), 
                 xlab="", ylab="", zlab="", shade=.01, border="black", nticks=3,cex.lab=1.5, col="white", scale=FALSE, box=TRUE, bty="n")
 f3.l1 = trans3d(x=rho.grid[1:21], y=rho.grid[1:21], z=diag(p.rho[1:21,1:21]), pmat=f3)
@@ -77,16 +77,21 @@ lines(f3.l2, lwd=12, col=stickerColor)
 dev.off()
 
 
-img <- magick::image_read("mcxs/ur.pdf")
-img |> magick::image_crop(geometry = "930x630+90+90")  -> img
+img <- magick::image_read_svg("mcxs/ur.svg", width = 1.66*1080, height = 1.66*840)
+img |> magick::image_crop(geometry = "1450x950+200+240")  -> img
 
-final_res<- hexSticker::sticker(img, package="mcxs", p_size=30,
-                   p_family = "sans",
-                   p_y = 1.5,
-                   p_color = stickerColor,
-                   s_x=0.95, s_y=0.88, 
-                   s_width=2,
-                   s_height = 1.05,
-                   filename="mcxs/mcxs.png",h_fill="white",h_color = stickerColor)
+final_res<- hexSticker::sticker(img, 
+                                package="mcxs", 
+                                p_size=60,
+                                p_family = "sans",
+                                p_y = 1.5,
+                                p_color = stickerColor,
+                                s_x=0.92, s_y=0.88, 
+                                s_width = 1.38,
+                                s_height = 2,
+                                filename="mcxs/mcxs.png",
+                                h_fill="white",
+                                h_color = stickerColor,
+                                dpi = 600)
 
 plot(final_res)
