@@ -71,11 +71,11 @@ library(hexSticker)
 
 final_res <- sticker(img, 
                      package = "forecast", 
-                     p_size = 33.6,
+                     p_size = 34,
                      p_family = "sans",
                      p_fontface = "plain",
                      p_y = 1.4,
-                     p_x = 0.59,
+                     p_x = 0.6,
                      p_color = "darkorchid1",
                      s_x = 0.98, 
                      s_y = 1, 
