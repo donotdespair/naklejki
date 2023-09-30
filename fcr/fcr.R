@@ -7,8 +7,7 @@ PATH        = "/Users/twozniak/Research/cash-rate-survey-forecasts/"
 
 # dates for the plot
 id1         = "2019-06" # the beginning of data plot
-id2         = "2023-09" # forecast origin
-id2a        = "2023-09" # data available until
+id2a        = "2023-09" # forecast origin/data available until
 id3         = "2024-09" # the last forecast
 time_id     = seq(from = zoo::as.yearmon(id1), to = zoo::as.yearmon(id3), by = 1/12)
 
@@ -68,29 +67,30 @@ img <- magick::image_read_svg("fcr/hydra.svg", width = 1.66*1080, height = 1.66*
 
 library(hexSticker)
 
-
+sticker_color = "darkorchid1"
+# "darkorchid3"
 final_res <- sticker(img, 
-                     package = "forecast", 
-                     p_size = 34,
+                     package = "forecasting", 
+                     p_size = 4.2,
                      p_family = "sans",
                      p_fontface = "plain",
                      p_y = 1.4,
-                     p_x = 0.6,
-                     p_color = "darkorchid1",
+                     p_x = 0.62,
+                     p_color = sticker_color,
                      s_x = 0.98, 
                      s_y = 1, 
                      s_width = 2,
                      s_height = 1.13,
                      url = "cash rate",
-                     u_size = 30,
+                     u_size = 5,
                      u_family = "sans",
-                     u_color = "darkorchid1",
+                     u_color = sticker_color,
                      u_angle = 0,
                      u_x = 0.2,
-                     u_y = 1.2,
-                     filename="fcr/fcr.png",
-                     h_fill="white",
-                     h_color = "darkorchid4",
+                     u_y = 1.22,
+                     filename = "fcr/fcr.png",
+                     h_fill = "white",
+                     h_color = sticker_color,
                      h_size = 1.2,
                      dpi = 600) 
 plot(final_res)
