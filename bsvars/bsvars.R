@@ -29,8 +29,8 @@ irf_hdi       = apply(multiplier * irfs23[i,j,,], 1, HDInterval::hdi, credMass =
 
 
 svg(file = "bsvars/irf.svg", 
-    width = 0.4 * 9, 
-    height = 0.4 * 7
+    width = 0.5 * 9, 
+    height = 0.5 * 7
 )
 par(
   bg = bspink,
@@ -74,14 +74,29 @@ axis(2,
 )
 dev.off()
 
-
+# image formattiing and including
 img <- magick::image_read_svg("bsvars/irf.svg", width = 0.3 * 1080, height = 0.3 * 840)
 # img |> magick::image_crop(geometry = "1450x950+200+240")  -> img
+
+# font adjustments
+## Loading Google fonts (http://www.google.com/fonts)
+font_add_google("Comfortaa", "gochi")
+# various options I tried for the first argument above:
+# "Quicksand" v
+# "Comfortaa" vv
+# "Rajdhani"
+# "Montserrat Alternates" v
+# "Mitr" v
+# "Baloo 2" vv
+
+## Automatically use showtext to render text for future devices
+showtext::showtext_auto()
+
 
 final_res<- hexSticker::sticker(img, 
                                 package="bsvars", 
                                 p_size=60,
-                                p_family = "sans",
+                                p_family = "gochi",
                                 p_fontface = "bold",
                                 p_y = 1.4,
                                 p_color = bsyell,
