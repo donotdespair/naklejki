@@ -1,0 +1,98 @@
+
+############################################################
+# Reproduction of the IRF from Lütkepohl, Shang, Uzeda, Woźniak (2024)
+############################################################
+
+# Define colors
+bspink = "#ff69b4"
+bsyell = "#ffd700"
+
+stickerColor = bspink
+
+# Reproduction of the IRFs
+############################################################
+library(bsvars)
+
+load("bsvars/tax23nPM.rda")
+irfs23 = compute_impulse_responses(post, horizon = 20)
+data("us_fiscal_lsuw")
+# rm("post","sddr", spec)
+
+data2006q4 = us_fiscal_lsuw[which(zoo::index(us_fiscal_lsuw) == 2006.75), ]
+multiplier = -(data2006q4[3]/data2006q4[1])
+
+# impulse responses
+#######################################################
+i = 3; j = 1
+irf_med       = apply(multiplier * irfs23[i,j,,], 1, median)
+irf_hdi       = apply(multiplier * irfs23[i,j,,], 1, HDInterval::hdi, credMass = 0.7)
+
+
+svg(file = "bsvars/irf.svg", 
+    width = 0.4 * 9, 
+    height = 0.4 * 7
+)
+par(
+  bg = bspink,
+  mar = c(2, 2, 0, 0)
+)
+graphics::plot(x = 1:length(irf_med), 
+     y = irf_med,
+     ylim = c(-0.04, 0.04),
+     # ylim = range(irf_hdi),
+     type = "l",
+     col = bsyell,
+     lwd = 16,
+     ylab = "",
+     xlab = "",
+     axes = FALSE
+)
+# polygon(
+#   x = c(1:length(irf_med), rev(1:length(irf_med))),
+#   y = c(irf_hdi[1,], rev(irf_hdi[2,])),
+#   col = bsyell,
+#   border = NA
+# )
+
+ticks_vertical      = c(seq(from = 0, to = 5, by = 0.05),
+                        seq(from = 10, to = 15, by = 0.05),
+                        20) + 1
+ticks_horizontal    = c(seq(from = -.035, to = 0, by = 0.0005),0,.035)
+axis(1, 
+     ticks_vertical, 
+     rep("",length(ticks_vertical)), 
+     col = bsyell, 
+     lwd = 4, 
+     lwd.ticks = 4
+)
+axis(2, 
+     ticks_horizontal, 
+     rep("", length(ticks_horizontal)), 
+     col = bsyell, 
+     lwd = 4, 
+     lwd.ticks = 4
+)
+dev.off()
+
+
+img <- magick::image_read_svg("bsvars/irf.svg", width = 0.3 * 1080, height = 0.3 * 840)
+# img |> magick::image_crop(geometry = "1450x950+200+240")  -> img
+
+final_res<- hexSticker::sticker(img, 
+                                package="bsvars", 
+                                p_size=60,
+                                p_family = "sans",
+                                p_fontface = "bold",
+                                p_y = 1.4,
+                                p_color = bsyell,
+                                s_x=1, 
+                                s_y = 0.8, 
+                                s_width = 1.2,
+                                s_height = 1.5,
+                                filename="bsvars/bsvars.png",
+                                h_fill= bspink,
+                                h_color = bsyell,
+                                h_size = 1.2,
+                                dpi = 600)
+
+plot(final_res)
