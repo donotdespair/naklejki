@@ -115,9 +115,11 @@ final_res<- hexSticker::sticker(img,
                                 filename = "bsvars/bsvars.png",
                                 h_fill = bspink,
                                 h_color = bsyell,
-                                h_size = 1.8,
+                                h_size = 1.3,
                                 dpi = 600)
 
 plot(final_res)
+
+system("cp bsvars/bsvars.png /Users/twozniak/Research/bsvars/")
 
 # contribute to the README of the hexSticker on GH: https://github.com/GuangchuangYu/hexSticker?tab=readme-ov-file
