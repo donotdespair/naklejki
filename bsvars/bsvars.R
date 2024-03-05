@@ -39,7 +39,7 @@ par(
 )
 graphics::plot(x = 1:length(irf_med), 
      y = irf_med,
-     ylim = c(-0.06, 0.06),
+     ylim = c(-0.065, 0.06),
      # ylim = range(irf_hdi),
      type = "l",
      col = bsyell,
@@ -64,7 +64,7 @@ abline(
 ticks_vertical      = c(seq(from = 0, to = 5, by = 0.05),
                         seq(from = 10, to = 15, by = 0.05),
                         20) + 1
-ticks_horizontal    = c(seq(from = -.055, to = 0, by = 0.0005),0,.055)
+ticks_horizontal    = c(seq(from = -.057, to = 0, by = 0.0005),0,.057)
 axis(1, 
      ticks_vertical, 
      rep("",length(ticks_vertical)), 
