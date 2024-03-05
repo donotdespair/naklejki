@@ -29,8 +29,8 @@ irf_hdi       = apply(multiplier * irfs23[i,j,,], 1, HDInterval::hdi, credMass =
 
 
 svg(file = "bsvars/irf.svg", 
-    width = 0.5 * 9, 
-    height = 0.5 * 7
+    width = 1 * 9, 
+    height = 1 * 7
 )
 par(
   bg = bspink,
@@ -42,10 +42,15 @@ graphics::plot(x = 1:length(irf_med),
      # ylim = range(irf_hdi),
      type = "l",
      col = bsyell,
-     lwd = 16,
+     lwd = 32,
      ylab = "",
      xlab = "",
      axes = FALSE
+)
+abline(
+  h = 20,
+  col = "white",
+  lwd = 4
 )
 # polygon(
 #   x = c(1:length(irf_med), rev(1:length(irf_med))),
@@ -62,20 +67,20 @@ axis(1,
      ticks_vertical, 
      rep("",length(ticks_vertical)), 
      col = bsyell, 
-     lwd = 4, 
-     lwd.ticks = 4
+     lwd = 12, 
+     lwd.ticks = 12
 )
 axis(2, 
      ticks_horizontal, 
      rep("", length(ticks_horizontal)), 
      col = bsyell, 
-     lwd = 4, 
-     lwd.ticks = 4
+     lwd = 12, 
+     lwd.ticks = 12
 )
 dev.off()
 
 # image formattiing and including
-img <- magick::image_read_svg("bsvars/irf.svg", width = 0.3 * 1080, height = 0.3 * 840)
+img <- magick::image_read_svg("bsvars/irf.svg", width = 1 * 1080, height = 1 * 840)
 # img |> magick::image_crop(geometry = "1450x950+200+240")  -> img
 
 # font adjustments
@@ -111,3 +116,5 @@ final_res<- hexSticker::sticker(img,
                                 dpi = 600)
 
 plot(final_res)
+
+# contribute to the README of the hexSticker on GH: https://github.com/GuangchuangYu/hexSticker?tab=readme-ov-file
