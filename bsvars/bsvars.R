@@ -45,12 +45,13 @@ graphics::plot(x = 1:length(irf_med),
      lwd = 32,
      ylab = "",
      xlab = "",
+     lend = 2,
      axes = FALSE
 )
 abline(
-  h = 20,
-  col = "white",
-  lwd = 4
+  v = 21.5,
+  col = bspink,
+  lwd = 30
 )
 # polygon(
 #   x = c(1:length(irf_med), rev(1:length(irf_med))),
@@ -68,14 +69,16 @@ axis(1,
      rep("",length(ticks_vertical)), 
      col = bsyell, 
      lwd = 12, 
-     lwd.ticks = 12
+     lwd.ticks = 12,
+     tcl = -1
 )
 axis(2, 
      ticks_horizontal, 
      rep("", length(ticks_horizontal)), 
      col = bsyell, 
      lwd = 12, 
-     lwd.ticks = 12
+     lwd.ticks = 12,
+     tcl = -1
 )
 dev.off()
 
@@ -85,7 +88,7 @@ img <- magick::image_read_svg("bsvars/irf.svg", width = 1 * 1080, height = 1 * 8
 
 # font adjustments
 ## Loading Google fonts (http://www.google.com/fonts)
-font_add_google("Comfortaa", "gochi")
+sysfonts::font_add_google("Comfortaa", "font_fam")
 # various options I tried for the first argument above:
 # "Quicksand" v
 # "Comfortaa" vv
@@ -99,20 +102,20 @@ showtext::showtext_auto()
 
 
 final_res<- hexSticker::sticker(img, 
-                                package="bsvars", 
-                                p_size=60,
-                                p_family = "gochi",
+                                package = "bsvars", 
+                                p_size = 60,
+                                p_family = "font_fam",
                                 p_fontface = "bold",
                                 p_y = 1.4,
                                 p_color = bsyell,
-                                s_x=1, 
+                                s_x = 1, 
                                 s_y = 0.8, 
-                                s_width = 1.2,
-                                s_height = 1.5,
-                                filename="bsvars/bsvars.png",
-                                h_fill= bspink,
+                                s_width = 1.1,
+                                s_height = 1.2,
+                                filename = "bsvars/bsvars_Comfortaa.png",
+                                h_fill = bspink,
                                 h_color = bsyell,
-                                h_size = 1.2,
+                                h_size = 1.8,
                                 dpi = 600)
 
 plot(final_res)
