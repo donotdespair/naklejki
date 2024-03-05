@@ -88,7 +88,7 @@ img <- magick::image_read_svg("bsvars/irf.svg", width = 1 * 1080, height = 1 * 8
 
 # font adjustments
 ## Loading Google fonts (http://www.google.com/fonts)
-sysfonts::font_add_google("Comfortaa", "font_fam")
+sysfonts::font_add_google("Baloo 2", "font_fam")
 # various options I tried for the first argument above:
 # "Quicksand" v
 # "Comfortaa" vv
@@ -112,7 +112,7 @@ final_res<- hexSticker::sticker(img,
                                 s_y = 0.8, 
                                 s_width = 1.1,
                                 s_height = 1.2,
-                                filename = "bsvars/bsvars_Comfortaa.png",
+                                filename = "bsvars/bsvars.png",
                                 h_fill = bspink,
                                 h_color = bsyell,
                                 h_size = 1.8,
