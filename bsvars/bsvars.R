@@ -6,6 +6,7 @@
 # Define colors
 bspink = "#ff69b4"
 bsyell = "#ffd700"
+bsyell_trans  = rgb(t(col2rgb(bsyell, alpha = F)), alpha=170, maxColorValue=255)
 
 stickerColor = bspink
 
@@ -26,11 +27,11 @@ multiplier = -(data2006q4[3]/data2006q4[1])
 i = 3; j = 1
 irf_med       = apply(multiplier * irfs23[i,j,,], 1, median)
 irf_hdi       = apply(multiplier * irfs23[i,j,,], 1, HDInterval::hdi, credMass = 0.7)
+irf_hdi[2,15:19] = c(0.020, 0.0165, 0.013, 0.0093, 0.0075)
 
-
-svg(file = "bsvars/irf.svg", 
-    width = 1 * 9, 
-    height = 1 * 7
+svg(file = "bsvars/irf.svg",
+    width = 1 * 9,
+    height = 1 * 6.5
 )
 par(
   bg = bspink,
@@ -38,7 +39,7 @@ par(
 )
 graphics::plot(x = 1:length(irf_med), 
      y = irf_med,
-     ylim = c(-0.04, 0.04),
+     ylim = c(-0.06, 0.06),
      # ylim = range(irf_hdi),
      type = "l",
      col = bsyell,
@@ -48,22 +49,22 @@ graphics::plot(x = 1:length(irf_med),
      lend = 2,
      axes = FALSE
 )
+polygon(
+  x = c(1:length(irf_med), rev(1:length(irf_med))),
+  y = c(irf_hdi[1,], rev(irf_hdi[2,])),
+  col = bsyell_trans,
+  border = NA
+)
 abline(
-  v = 21.5,
+  v = 21.35,
   col = bspink,
   lwd = 30
 )
-# polygon(
-#   x = c(1:length(irf_med), rev(1:length(irf_med))),
-#   y = c(irf_hdi[1,], rev(irf_hdi[2,])),
-#   col = bsyell,
-#   border = NA
-# )
 
 ticks_vertical      = c(seq(from = 0, to = 5, by = 0.05),
                         seq(from = 10, to = 15, by = 0.05),
                         20) + 1
-ticks_horizontal    = c(seq(from = -.035, to = 0, by = 0.0005),0,.035)
+ticks_horizontal    = c(seq(from = -.055, to = 0, by = 0.0005),0,.055)
 axis(1, 
      ticks_vertical, 
      rep("",length(ticks_vertical)), 
@@ -101,15 +102,15 @@ sysfonts::font_add_google("Baloo 2", "font_fam")
 showtext::showtext_auto()
 
 
-final_res<- hexSticker::sticker(img, 
-                                package = "bsvars", 
+final_res <- hexSticker::sticker(img,
+                                package = "bsvars",
                                 p_size = 60,
                                 p_family = "font_fam",
                                 p_fontface = "bold",
                                 p_y = 1.4,
                                 p_color = bsyell,
-                                s_x = 1, 
-                                s_y = 0.8, 
+                                s_x = 1,
+                                s_y = 0.84,
                                 s_width = 1.1,
                                 s_height = 1.2,
                                 filename = "bsvars/bsvars.png",
