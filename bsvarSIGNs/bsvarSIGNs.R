@@ -32,8 +32,8 @@ posterior      = estimate(burn_in, S = 1000, thin = 5)
 # sticker properties
 ############################################################
 # Define colors
-bsora  = "#FEC254"
-bsblu  = "#22FFFF"
+bsora  = "#2BAE66FF"
+bsblu  = "#FCF6F5FF"
 
 
 # bsyell_trans  = rgb(t(col2rgb(bsyell, alpha = F)), alpha=170, maxColorValue=255)
@@ -43,7 +43,7 @@ stickerColor = bsblu
 # impulse responses
 #######################################################
 irfs    = compute_irf(posterior, horizon = 20)
-N       = 250
+N       = 200
 irfs    = irfs[,,, (dim(irfs)[4] - N):dim(irfs)[4]]
 
 i = 3; j = 1
