@@ -32,8 +32,8 @@ posterior      = estimate(burn_in, S = 1000, thin = 5)
 # sticker properties
 ############################################################
 # Define colors
-bsora  = "#2BAE66FF"
-bsblu  = "#FCF6F5FF"
+bsora  = "#E93CAC"
+bsblu  = "#1E22AA"
 
 
 # bsyell_trans  = rgb(t(col2rgb(bsyell, alpha = F)), alpha=170, maxColorValue=255)
