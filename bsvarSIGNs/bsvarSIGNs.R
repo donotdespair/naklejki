@@ -5,34 +5,35 @@
 
 # estimate the model
 ############################################################
+# devtools::install_github("bsvars/bsvars")
 # devtools::install_github("bsvars/bsvarSIGNs")
 library(bsvarSIGNs)
 
-# load data
-data(optimism)
-
-zero_irf          = matrix(0, nrow = 5, ncol = 5)
-zero_irf[1, 1]    = 1
-sign_irf          = array(0, dim = c(5, 5, 1))
-sign_irf[2, 1, 1] = 1
-
-specification = specify_bsvarSIGN$new(
-  optimism*100,
-  p        = 4,
-  sign_irf = sign_irf,
-  zero_irf = zero_irf
-)
-
-posterior = estimate(specification, S = 10000)
-
-# save(post, spec, file = paste0("spartan/results/tax23nPM.rda"))
+# # load data
+# data(optimism)
+# 
+# zero_irf          = matrix(0, nrow = 5, ncol = 5)
+# zero_irf[1, 1]    = 1
+# sign_irf          = array(0, dim = c(5, 5, 1))
+# sign_irf[2, 1, 1] = 1
+# 
+# set.seed(123)
+# specification = specify_bsvarSIGN$new(
+#   optimism * 100,
+#   p        = 4,
+#   sign_irf = sign_irf,
+#   zero_irf = zero_irf
+# )
+# 
+# posterior = estimate(specification, S = 10000)
+# save(specification, posterior, file = "bsvarSIGNs/bsvarSIGNs.rda")
+load("bsvarSIGNs/bsvarSIGNs.rda")
 
 # sticker properties
 ############################################################
 # Define colors
 bsora  = "#E93CAC"
 bsblu  = "#1E22AA"
-
 
 # bsyell_trans  = rgb(t(col2rgb(bsyell, alpha = F)), alpha=170, maxColorValue=255)
 
@@ -45,7 +46,6 @@ N       = 100
 irfs    = irfs[,,, (dim(irfs)[4] - N):dim(irfs)[4]]
 
 i = 5; j = 1
-
 irfs_med = apply(irfs[i, j,,], 1, median)
 which_med   = which.min(apply((irfs[i,j,,] - irfs_med)^2, 1, sum))
 
