@@ -1,6 +1,6 @@
 
 ############################################################
-# Reproduction of the IRF from Anatolin-Diaz & Rubio-Ramirez (2018, AER)
+# Reproduction of the IRF from Arias, Rubio-Ramírez, and Waggoner (2018)
 ############################################################
 
 # estimate the model
@@ -8,24 +8,22 @@
 # devtools::install_github("bsvars/bsvarSIGNs")
 library(bsvarSIGNs)
 
-# upload data
-data(oil)
+# load data
+data(optimism)
 
-# restrictions as in Antolín-Díaz & Rubio-Ramírez (2018)
-sign_narrative = matrix(c(2, -1, 3, 2, 236, 0), ncol = 6)
-sign_irf       = array(matrix(c(-1, -1, 1, 1, 1, 1, 1, -1, 1), nrow = 3),
-                       dim = c(3, 3, 1))
+zero_irf          = matrix(0, nrow = 5, ncol = 5)
+zero_irf[1, 1]    = 1
+sign_irf          = array(0, dim = c(5, 5, 1))
+sign_irf[2, 1, 1] = 1
 
-# specify the model and set seed
-set.seed(123)
-specification  = specify_bsvarSIGN$new(oil,
-                                       p              = 12,
-                                       sign_irf       = sign_irf,
-                                       sign_narrative = sign_narrative,
-                                       max_tries      = 1e6,
-                                       )
-burn_in        = estimate(specification, S = 500)
-posterior      = estimate(burn_in, S = 1000, thin = 5)
+specification = specify_bsvarSIGN$new(
+  optimism*100,
+  p        = 4,
+  sign_irf = sign_irf,
+  zero_irf = zero_irf
+)
+
+posterior = estimate(specification, S = 10000)
 
 # save(post, spec, file = paste0("spartan/results/tax23nPM.rda"))
 
@@ -42,11 +40,11 @@ stickerColor = bsblu
 
 # impulse responses
 #######################################################
-irfs    = compute_irf(posterior, horizon = 20)
-N       = 200
+irfs    = compute_impulse_responses(posterior, horizon = 20)
+N       = 100
 irfs    = irfs[,,, (dim(irfs)[4] - N):dim(irfs)[4]]
 
-i = 3; j = 1
+i = 5; j = 1
 
 irfs_med = apply(irfs[i, j,,], 1, median)
 which_med   = which.min(apply((irfs[i,j,,] - irfs_med)^2, 1, sum))
@@ -66,7 +64,7 @@ par(
 plot.ts(
   irfs[i, j,, 1], 
   col = bsora,
-  ylim = range(-9, 9),
+  ylim = range(-1.5, 1.5),
   ylab = "",
   xlab = "",
   lend = 2,
