@@ -146,5 +146,6 @@ plot(final_res)
 system("cp bsvars/bsvars.png /Users/twozniak/Research/bsvars/")
 system("cp bsvars/bsvars.png /Users/twozniak/Research/bsvars/bsvars.github.io/")
 system("cp bsvars/bsvars.png /Users/twozniak/Research/donotdespair/")
+system("cp bsvars/bsvars.png /Users/twozniak/Research/bsvars/presentations/2024-05-bsvars-mcxs/")
 
 # contribute to the README of the hexSticker on GH: https://github.com/GuangchuangYu/hexSticker?tab=readme-ov-file
