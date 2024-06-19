@@ -153,5 +153,6 @@ system("cp bsvars/bsvars.png /Users/twozniak/Research/bsvars/")
 system("cp bsvars/bsvars.png /Users/twozniak/Research/bsvars/bsvars.github.io/")
 system("cp bsvars/bsvars.png /Users/twozniak/Research/donotdespair/")
 system("cp bsvars/bsvars.png /Users/twozniak/Research/bsvars/presentations/2024-05-bsvars-mcxs/")
+system("cp bsvars/bsvars_ukr.png /Users/twozniak/Research/bsvars/presentations/2024-08-bsvars-ukr/")
 
 # contribute to the README of the hexSticker on GH: https://github.com/GuangchuangYu/hexSticker?tab=readme-ov-file
