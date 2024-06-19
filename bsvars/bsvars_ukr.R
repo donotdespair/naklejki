@@ -3,26 +3,6 @@
 # Reproduction of the IRF from Lütkepohl, Shang, Uzeda, Woźniak (2024)
 ############################################################
 
-# estimate the model
-############################################################
-# library(bsvars)
-# data("us_fiscal_lsuw")
-# data("us_fiscal_ex")
-# 
-# set.seed(1234)
-# B         = matrix(TRUE, 3, 3)
-# spec      = specify_bsvar_sv$new(
-#   data = us_fiscal_lsuw,
-#   p    = 4,
-#   exogenous = us_fiscal_ex,
-#   B    = B
-# )
-# 
-# burn      = estimate(spec, 3e5, thin = 1e4)
-# post      = estimate(burn, 6e5, thin = 10)
-# 
-# save(post, spec, file = paste0("spartan/results/tax23nPM.rda"))
-
 # sticker properties
 ############################################################
 # Define colors
@@ -32,23 +12,12 @@ bsyell_trans  = rgb(t(col2rgb(bsyell, alpha = F)), alpha=170, maxColorValue=255)
 
 stickerColor = bspink
 
-# Reproduction of the IRFs
-############################################################
-library(bsvars)
-
-load("bsvars/tax23nPM.rda")
-irfs23 = compute_impulse_responses(post, horizon = 20)
-data("us_fiscal_lsuw")
-# rm("post","sddr", spec)
-
-data2006q4 = us_fiscal_lsuw[which(zoo::index(us_fiscal_lsuw) == 2006.75), ]
-multiplier = -(data2006q4[3]/data2006q4[1])
-
 # impulse responses
 #######################################################
-i = 3; j = 1
-irf_med       = apply(multiplier * irfs23[i,j,,], 1, median)
-irf_hdi       = apply(multiplier * irfs23[i,j,,], 1, HDInterval::hdi, credMass = 0.7)
+library(bsvars)
+load("bsvars/bsvars_irfs.rda")
+irf_med       = apply(irfs, 1, median)
+irf_hdi       = apply(irfs, 1, HDInterval::hdi, credMass = 0.7)
 irf_hdi[2,15:19] = c(0.020, 0.0165, 0.013, 0.0093, 0.0075)
 
 svg(file = "bsvars/irf_ukr.svg",
