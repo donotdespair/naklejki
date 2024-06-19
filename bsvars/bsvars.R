@@ -36,19 +36,25 @@ stickerColor = bspink
 ############################################################
 library(bsvars)
 
-load("bsvars/tax23nPM.rda")
-irfs23 = compute_impulse_responses(post, horizon = 20)
-data("us_fiscal_lsuw")
-# rm("post","sddr", spec)
 
-data2006q4 = us_fiscal_lsuw[which(zoo::index(us_fiscal_lsuw) == 2006.75), ]
-multiplier = -(data2006q4[3]/data2006q4[1])
+# load("bsvars/tax23nPM.rda")
+# irfs23 = compute_impulse_responses(post, horizon = 20)
+# data("us_fiscal_lsuw")
+# rm("post","sddr", spec)
+# 
+# data2006q4 = us_fiscal_lsuw[which(zoo::index(us_fiscal_lsuw) == 2006.75), ]
+# multiplier = -(data2006q4[3]/data2006q4[1])
+# 
+# i = 3; j = 1
+# irfs = multiplier * irfs23[i,j,,]
+# save(irfs, file = "bsvars/bsvars_irfs.rda")
+
+load("bsvars/bsvars_irfs.rda")
 
 # impulse responses
 #######################################################
-i = 3; j = 1
-irf_med       = apply(multiplier * irfs23[i,j,,], 1, median)
-irf_hdi       = apply(multiplier * irfs23[i,j,,], 1, HDInterval::hdi, credMass = 0.7)
+irf_med       = apply(irfs, 1, median)
+irf_hdi       = apply(irfs, 1, HDInterval::hdi, credMass = 0.7)
 irf_hdi[2,15:19] = c(0.020, 0.0165, 0.013, 0.0093, 0.0075)
 
 svg(file = "bsvars/irf.svg",
