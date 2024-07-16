@@ -32,8 +32,16 @@ load("bsvarSIGNs/bsvarSIGNs.rda")
 # sticker properties
 ############################################################
 # Define colors
-bsora  = "#E93CAC"
-bsblu  = "#1E22AA"
+bsblu   = "#2B0E66" 
+bspin   = "#F500BD"
+bsgre   = "#00BE67"
+
+# bsora  = "#E93CAC"
+# bsblu  = "#1E22AA"
+
+# bsora  = "#ff124f"
+# bsblu  = "#fe75fe"
+
 
 # bsyell_trans  = rgb(t(col2rgb(bsyell, alpha = F)), alpha=170, maxColorValue=255)
 
@@ -41,8 +49,9 @@ stickerColor = bsblu
 
 # impulse responses
 #######################################################
+class(posterior) = "PosteriorBSVAR"
 irfs    = compute_impulse_responses(posterior, horizon = 20)
-N       = 100
+N       = 200
 irfs    = irfs[,,, (dim(irfs)[4] - N):dim(irfs)[4]]
 
 i = 5; j = 1
@@ -63,7 +72,7 @@ par(
 )
 plot.ts(
   irfs[i, j,, 1], 
-  col = bsora,
+  col = bspin,
   ylim = range(-1.5, 1.5),
   ylab = "",
   xlab = "",
@@ -73,7 +82,7 @@ plot.ts(
 for (n in 1:ncol(irfs[i, j,,])) {
   lines(
     irfs[i, j,, n],
-    col = bsora
+    col = bsgre
   )
 }
 # lines(
@@ -90,7 +99,7 @@ ticks_horizontal    = c(-9, 0, seq(from = 0, to = 9, by = 0.01))
 axis(1, 
      ticks_vertical, 
      rep("",length(ticks_vertical)), 
-     col = bsora, 
+     col = bspin, 
      lwd = 12, 
      lwd.ticks = 12,
      tcl = -1
@@ -98,7 +107,7 @@ axis(1,
 axis(2, 
      ticks_horizontal, 
      rep("", length(ticks_horizontal)), 
-     col = bsora, 
+     col = bspin, 
      lwd = 12, 
      lwd.ticks = 12,
      tcl = -1
@@ -123,14 +132,14 @@ final_res <- hexSticker::sticker(img,
                                 p_family = "font_fam",
                                 p_fontface = "bold",
                                 p_y = 1.38,
-                                p_color = bsora,
+                                p_color = bspin,
                                 s_x = 1,
                                 s_y = 0.84,
                                 s_width = 1.1,
                                 s_height = 1.0,
                                 filename = "bsvarSIGNs/bsvarSIGNs.png",
                                 h_fill = bsblu,
-                                h_color = bsora,
+                                h_color = bspin,
                                 h_size = 1.3,
                                 dpi = 1200)
 
