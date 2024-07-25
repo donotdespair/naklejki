@@ -7,56 +7,38 @@
 ############################################################
 # devtools::install_github("bsvars/bsvars")
 # devtools::install_github("bsvars/bsvarSIGNs")
-library(bsvarSIGNs)
-
-# # load data
-# data(optimism)
-# 
-# zero_irf          = matrix(0, nrow = 5, ncol = 5)
-# zero_irf[1, 1]    = 1
-# sign_irf          = array(0, dim = c(5, 5, 1))
-# sign_irf[2, 1, 1] = 1
-# 
+# library(bsvarSIGNs)
 # set.seed(123)
-# specification = specify_bsvarSIGN$new(
-#   optimism * 100,
-#   p        = 4,
-#   sign_irf = sign_irf,
-#   zero_irf = zero_irf
-# )
+# data(optimism)
+# sign_irf       = matrix(c(0, 1, rep(NA, 23)), 5, 5)
+# specification  = specify_bsvarSIGN$new(optimism * 100,
+#                                        p        = 4,
+#                                        sign_irf = sign_irf)
+# specification$prior$Ysoc = matrix(0, nrow(specification$prior$Ysoc), 0)
+# specification$prior$Xsoc = matrix(0, nrow(specification$prior$Xsoc), 0)
+# specification$prior$Ysur = matrix(0, nrow(specification$prior$Ysur), 0)
+# specification$prior$Xsur = matrix(0, nrow(specification$prior$Xsur), 0)
+# posterior      = estimate(specification, S = 200000)
 # 
-# posterior = estimate(specification, S = 10000)
-# save(specification, posterior, file = "bsvarSIGNs/bsvarSIGNs.rda")
+# save(posterior, specification, sign_irf, file = "bsvarSIGNs/bsvarSIGNs.rda")
 load("bsvarSIGNs/bsvarSIGNs.rda")
+
+# impulse responses
+#######################################################
+irfs    = compute_impulse_responses(posterior, horizon = 20)
+i = 5; j = 1
+irfs    = irfs[i,j,, ]
+irf_med       = apply(irfs, 1, median)
+irf_hdi       = apply(irfs, 1, HDInterval::hdi, credMass = 0.7)
+
 
 # sticker properties
 ############################################################
 # Define colors
-bsblu   = "#2B0E66" 
+bsblu   = "#001D31"
 bspin   = "#F500BD"
-bsgre   = "#00BE67"
-
-# bsora  = "#E93CAC"
-# bsblu  = "#1E22AA"
-
-# bsora  = "#ff124f"
-# bsblu  = "#fe75fe"
-
-
-# bsyell_trans  = rgb(t(col2rgb(bsyell, alpha = F)), alpha=170, maxColorValue=255)
 
 stickerColor = bsblu
-
-# impulse responses
-#######################################################
-class(posterior) = "PosteriorBSVAR"
-irfs    = compute_impulse_responses(posterior, horizon = 20)
-N       = 200
-irfs    = irfs[,,, (dim(irfs)[4] - N):dim(irfs)[4]]
-
-i = 5; j = 1
-irfs_med = apply(irfs[i, j,,], 1, median)
-which_med   = which.min(apply((irfs[i,j,,] - irfs_med)^2, 1, sum))
 
 
 
@@ -64,38 +46,58 @@ which_med   = which.min(apply((irfs[i,j,,] - irfs_med)^2, 1, sum))
 #######################################################
 svg(file = "bsvarSIGNs/irf.svg",
     width = 1.2 * 9,
-    height = 1 * 6.5
+    height = 1.2 * 6.5
 )
 par(
   bg = bsblu,
   mar = c(2, 2, 0, 0)
 )
-plot.ts(
-  irfs[i, j,, 1], 
+graphics::plot(
+  x = 1:length(irf_med), 
+  y = irf_med,
+  ylim = c(-0.5, 1.5),
+  # ylim = range(irf_hdi),
+  type = "n",
   col = bspin,
-  ylim = range(-1.5, 1.5),
+  lwd = 32,
   ylab = "",
   xlab = "",
   lend = 2,
   axes = FALSE
 )
-for (n in 1:ncol(irfs[i, j,,])) {
-  lines(
-    irfs[i, j,, n],
-    col = bsgre
-  )
-}
-# lines(
-#   irfs[i, j,, which_med],
-#   col = bsora,
-#   lwd = 16,
-#   lend = 2
-# )
-
-ticks_vertical      = c(seq(from = 0, to = 5, by = 0.05),
-                        seq(from = 10, to = 15, by = 0.05),
-                        20) + 1
-ticks_horizontal    = c(-9, 0, seq(from = 0, to = 9, by = 0.01))
+polygon(
+  x = c(1:length(irf_med), rev(1:length(irf_med))),
+  y = c(irf_hdi[1,], rev(irf_hdi[2,])),
+  col = bspin,
+  border = NA
+)
+graphics::lines(
+  x = 1:length(irf_med), 
+  y = irf_med,
+  # ylim = c(-0.065, 0.06),
+  col = bsblu,
+  lwd = 32,
+  lend = 2
+)
+abline(
+  v = 21.3,
+  col = bsblu,
+  lwd = 30
+)
+abline(
+  v = 0.7,
+  col = bsblu,
+  lwd = 30
+)
+ticks_vertical      = c(
+  seq(from = 0, to = 5, by = 0.05),
+  seq(from = 10, to = 15, by = 0.05),
+  20) + 1
+ticks_horizontal    = c(
+  seq(from = -0.5, to = 0, by = 0.005),
+  seq(from = 0.5, to = 1, by = 0.005),
+  1.5
+)
 axis(1, 
      ticks_vertical, 
      rep("",length(ticks_vertical)), 
@@ -115,7 +117,7 @@ axis(2,
 dev.off()
 
 # image formattiing and including
-img <- magick::image_read_svg("bsvarSIGNs/irf.svg", width = 2 * 1.2 * 1080, height = 2 * 1 * 840)
+img <- magick::image_read_svg("bsvarSIGNs/irf.svg", width = 2 * 1.2 * 1080, height = 2 * 1.1 * 840)
 # img |> magick::image_crop(geometry = "1450x950+200+240")  -> img
 
 # font adjustments
@@ -131,10 +133,10 @@ final_res <- hexSticker::sticker(img,
                                 p_size = 80,
                                 p_family = "font_fam",
                                 p_fontface = "bold",
-                                p_y = 1.38,
+                                p_y = 1.4,
                                 p_color = bspin,
                                 s_x = 1,
-                                s_y = 0.84,
+                                s_y = 0.87,
                                 s_width = 1.1,
                                 s_height = 1.0,
                                 filename = "bsvarSIGNs/bsvarSIGNs.png",
@@ -145,6 +147,6 @@ final_res <- hexSticker::sticker(img,
 
 plot(final_res)
 
-# system("cp bsvarSIGNs/bsvarSIGNs.png /Users/twozniak/Research/bsvarSIGNs/")
+# system("cp bsvarSIGNs/bsvarSIGNs.png /Users/twozniak/Research/bsvars/")
 
 # contribute to the README of the hexSticker on GH: https://github.com/GuangchuangYu/hexSticker?tab=readme-ov-file
