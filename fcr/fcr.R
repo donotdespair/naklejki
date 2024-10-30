@@ -3,20 +3,19 @@ rm(list = ls())
 
 # cash rate forecast hydra plot
 ######################################################
-PATH        = "/Users/twozniak/Research/cash-rate-survey-forecasts/"
+PATH        = "/Users/twozniak/Research/forecasting-cash-rate/forecasting-cash-rate.github.io/"
 
 # dates for the plot
-id1         = "2019-06" # the beginning of data plot
-id2a        = "2023-09" # forecast origin/data available until
-id3         = "2024-09" # the last forecast
+id1         = "2019-01" # the beginning of data plot
+id2         = "2024-10" # forecast origin
+id3         = "2025-11" # the last forecast
 time_id     = seq(from = zoo::as.yearmon(id1), to = zoo::as.yearmon(id3), by = 1/12)
-
 
 # download series
 icr_dwnld   = readrba::read_rba(series_id = "FIRMMCRTD")   # Cash Rate Target
 icr_tmp     = xts::xts(icr_dwnld$value, icr_dwnld$date)
 icr         = xts::to.monthly(icr_tmp, OHLC = FALSE)
-icr         = icr[paste0(id1,"/",id2a)]
+icr         = icr[paste0(id1,"/",id2)]
 
 # upload forecasts
 files       = list.files(paste0(PATH,"forecasts-backup/"))
@@ -24,40 +23,44 @@ files       = files[!grepl("quarter", files)]
 fc          = colorRampPalette(c("darkorchid1", "darkorchid4"))
 cols        = fc(length(files))
 
-xs          = matrix(NA, length(files), 13)
-ys          = matrix(NA, length(files), 13)
-
-for (i in 1:length(files)) {
-  forecasts_tmp = read.csv(paste0(PATH,"forecasts-backup/",files[i]))[,1:2]
-  xs[i,]        = seq(from = zoo::as.yearmon(forecasts_tmp[1,1]) - 1/12, to = zoo::as.yearmon(tail(forecasts_tmp[,1], 1)), by = 1/12)
-  ys[i,]        = c(as.numeric(icr[zoo::as.yearmon(forecasts_tmp[1,1]) - 1/12]), forecasts_tmp[,2])
-}
-
 
 svg("fcr/hydra.svg", width = 4 * 7, height = 4 * 5)
 plot(
   x = time_id, 
-  y = c(as.vector(icr), rep(NA,12)), 
+  y = c(as.vector(icr), rep(NA,13)), 
   main = "",
   ylab = "", 
   xlab = "", 
-  ylim = range(as.vector(icr),ys),
+  ylim = c(0,5),
   lwd = 40, 
   col = "darkorchid4",
   bty = "n", 
   type = "l",
   axes = FALSE
 )
-for (fi in files) {
-  forecasts_tmp = read.csv(paste0(PATH,"forecasts-backup/",fi))[,1:2]
-  lines( 
-    x = seq(from = zoo::as.yearmon(forecasts_tmp[1,1]) - 1/12, to = zoo::as.yearmon(tail(forecasts_tmp[,1], 1)), by = 1/12),
-    y = c(as.numeric(icr[zoo::as.yearmon(forecasts_tmp[1,1]) - 1/12]), forecasts_tmp[,2]),
-    col = cols[which(grepl(fi, files))],
-    lwd = 10
-  )
+for (fi in 1:length(files)) {
+  header = TRUE
+  if (fi > 16) header = FALSE
+  forecasts_tmp = read.csv(paste0(PATH,"forecasts-backup/",files[fi]), header = header)[,1:2]
+  if (fi != 20) {
+    lines( 
+      x = seq(from = zoo::as.yearmon(forecasts_tmp[1,1]) - 1/12, to = zoo::as.yearmon(tail(forecasts_tmp[,1], 1)), by = 1/12),
+      y = c(as.numeric(icr[zoo::as.yearmon(forecasts_tmp[1,1]) - 1/12]), forecasts_tmp[,2]),
+      col = cols[which(grepl(files[fi], files))],
+      lwd = 10
+    )
+  } else {
+    lines( 
+      x = seq(from = zoo::as.yearmon(forecasts_tmp[1,1]) - 1/12, to = zoo::as.yearmon(tail(forecasts_tmp[,1], 1)), by = 1/12),
+      y = c(as.numeric(icr[zoo::as.yearmon(forecasts_tmp[1,1]) - 2/12]), forecasts_tmp[,2]),
+      col = cols[which(grepl(files[fi], files))],
+      lwd = 10
+    )
+  }
 }
 dev.off()
+
+
 
 
 
@@ -77,10 +80,10 @@ final_res <- sticker(img,
                      p_y = 1.4,
                      p_x = 0.62,
                      p_color = sticker_color,
-                     s_x = 0.98, 
-                     s_y = 1, 
+                     s_x = 1.0, 
+                     s_y = 0.96, 
                      s_width = 2,
-                     s_height = 1.13,
+                     s_height = 1.1,
                      url = "cash rate",
                      u_size = 5,
                      u_family = "sans",
@@ -94,36 +97,3 @@ final_res <- sticker(img,
                      h_size = 1.2,
                      dpi = 600) 
 plot(final_res)
-
-
-
-# library(ggplot2)
-# library(ggimage)
-# 
-# hex = ggplot() + geom_hexagon(size = 3, fill = "white", color = "darkorchid4")
-# hex = hex + geom_image(aes(x = 0.98, y = 1, image = img), 
-#                        data.frame(x = 0.98, y = 1, image = img)
-#                        , size = 2, asp = 1)
-# 
-# hex = hex + geom_url(
-#   url = "forecast",
-#   x = 1.01,
-#   y = 0.14,
-#   family = "Aller_Rg",
-#   size = 13,
-#   color = "darkorchid1",
-#   angle = 30,
-#   hjust = 0.05
-# )
-# hex = hex + geom_url(
-#   url = "cash rate",
-#   x = 1.75,
-#   y = 0.57,
-#   family = "Aller_Rg",
-#   size = 13,
-#   color = "darkorchid1",
-#   angle = 90,
-#   hjust = -0.0
-# )
-# hex = hex + theme_sticker(size = 1)
-# plot(hex)
