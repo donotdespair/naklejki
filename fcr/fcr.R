@@ -6,9 +6,9 @@ rm(list = ls())
 PATH        = "/Users/twozniak/Research/forecasting-cash-rate/forecasting-cash-rate.github.io/"
 
 # dates for the plot
-id1         = "2019-01" # the beginning of data plot
-id2         = "2024-10" # forecast origin
-id3         = "2025-11" # the last forecast
+id1         = "2016-01" # the beginning of data plot
+id2         = "2026-04" # forecast origin
+id3         = "2027-04" # the last forecast
 time_id     = seq(from = zoo::as.yearmon(id1), to = zoo::as.yearmon(id3), by = 1/12)
 
 # download series
@@ -24,10 +24,10 @@ fc          = colorRampPalette(c("darkorchid1", "darkorchid4"))
 cols        = fc(length(files))
 
 
-svg("fcr/hydra.svg", width = 4 * 7, height = 4 * 5)
+svg("fcr/hydra.svg", width = 4 * 7, height = 4 * 5, bg = "transparent")
 plot(
   x = time_id, 
-  y = c(as.vector(icr), rep(NA,13)), 
+  y = c(as.vector(icr), rep(NA,12)), 
   main = "",
   ylab = "", 
   xlab = "", 
@@ -81,9 +81,9 @@ final_res <- sticker(img,
                      p_x = 0.62,
                      p_color = sticker_color,
                      s_x = 1.0, 
-                     s_y = 0.96, 
+                     s_y = 0.83, 
                      s_width = 2,
-                     s_height = 1.1,
+                     s_height = 1.25,
                      url = "cash rate",
                      u_size = 5,
                      u_family = "sans",
