@@ -39,7 +39,9 @@ xx  = seq(from = xrange[1] - 1, to = xrange[2] + 1, by = 0.1)
 reg = ret$coefficients[1] + ret$coefficients[2] * xx
 ul  = cbind(reg - 1.96*su, reg + 1.96*su)
 
-svg("qm1/qq.svg",  width = 4 * 7, height = 4 * 5)
+set.seed(12)
+
+svg("qm1/qq.svg",  width = 4 * 7, height = 4 * 5, bg = "transparent")
 par(
   mar = rep(0,4)
 )
@@ -59,11 +61,25 @@ plot(
 polygon(
   x = c(xx, rev(xx)),
   y = c(ul[,1], rev(ul[,2])),
+  col = "white",
+  border = NA
+)
+polygon(
+  x = c(xx, rev(xx)),
+  y = c(ul[,1], rev(ul[,2])),
   col = qm2_rgb,
   border = NA
 )
+ppoint = returns$education + rnorm(length(returns$education), 0, 0.06)
 points(
-  returns$education + rnorm(length(returns$education), 0, 0.07), 
+  ppoint, 
+  returns$wage,
+  pch = 19,
+  col = "white",
+  lwd = 30
+)
+points(
+  ppoint, 
   returns$wage,
   pch = 19,
   col = qm3_rgb,
@@ -79,18 +95,11 @@ dev.off()
 
 
 
-
-
-
 # Define subject colors
-qm1 = "#000F46"
-qm2 = "#46C8F0"
 stickerColor = qm1
 
-
-
 img <- magick::image_read_svg("qm1/qq.svg", width = 1.66*1080, height = 1.66*800)
-
+# img <- magick::image_background(img, color = "none", flatten = TRUE)
 final_res<- hexSticker::sticker(img, 
                                 package = "qm1", 
                                 p_size = 60,
@@ -100,12 +109,11 @@ final_res<- hexSticker::sticker(img,
                                 s_x = 1.0, 
                                 s_y = 0.92, 
                                 s_width=1.7,
-                                s_height = 1.4,
+                                s_height = 1.5,
                                 filename="qm1/qm1.png",
                                 h_fill="white",
                                 h_color = stickerColor,
                                 dpi = 600,
-                                spotlight = TRUE,
 )
 
 plot(final_res)
